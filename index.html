@@ -283,129 +283,131 @@ footer {
 </footer>
 
 <script>
-window.onload = () => {
-  document.getElementById("loader").style.display = "none";
-};
-
-/* ===== PARTICLES (mouse reactive + connections) ===== */
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particlesArray = [];
-let mouse = { x: null, y: null };
-
-window.addEventListener("mousemove", (e) => {
-  mouse.x = e.x;
-  mouse.y = e.y;
-});
-
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2;
-    this.speedX = (Math.random() - 0.5);
-    this.speedY = (Math.random() - 0.5);
-  }
-
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-
-    // mouse attraction
-    if (mouse.x && mouse.y) {
-      let dx = mouse.x - this.x;
-      let dy = mouse.y - this.y;
-      this.x += dx * 0.0008;
-      this.y += dy * 0.0008;
+  window.onload = () => {
+    document.getElementById("loader").style.display = "none";
+  };
+  
+  /* ===== CANVAS ===== */
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  let particlesArray = [];
+  let mouse = { x: null, y: null };
+  
+  window.addEventListener("mousemove", (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+  });
+  
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2;
+      this.speedX = (Math.random() - 0.5) * 0.6;
+      this.speedY = (Math.random() - 0.5) * 0.6;
     }
-
-    if (this.x < 0) this.x = canvas.width;
-    if (this.x > canvas.width) this.x = 0;
-    if (this.y < 0) this.y = canvas.height;
-    if (this.y > canvas.height) this.y = 0;
+  
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+  
+      if (mouse.x && mouse.y) {
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        this.x += dx * 0.0007;
+        this.y += dy * 0.0007;
+      }
+  
+      if (this.x < 0) this.x = canvas.width;
+      if (this.x > canvas.width) this.x = 0;
+      if (this.y < 0) this.y = canvas.height;
+      if (this.y > canvas.height) this.y = 0;
+    }
+  
+    draw() {
+      ctx.fillStyle = "rgba(56,189,248,0.9)";
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
-
-  draw() {
-    ctx.fillStyle = "rgba(56,189,248,0.9)";
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function connectParticles() {
-  for (let a = 0; a < particlesArray.length; a++) {
-    for (let b = a; b < particlesArray.length; b++) {
-      let dx = particlesArray[a].x - particlesArray[b].x;
-      let dy = particlesArray[a].y - particlesArray[b].y;
-      let dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < 120) {
-        ctx.strokeStyle = "rgba(56,189,248,0.12)";
-        ctx.beginPath();
-        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-        ctx.stroke();
+  
+  function connectParticles() {
+    for (let a = 0; a < particlesArray.length; a++) {
+      for (let b = a; b < particlesArray.length; b++) {
+        let dx = particlesArray[a].x - particlesArray[b].x;
+        let dy = particlesArray[a].y - particlesArray[b].y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+  
+        if (dist < 120) {
+          ctx.strokeStyle = "rgba(56,189,248,0.12)";
+          ctx.beginPath();
+          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+          ctx.stroke();
+        }
       }
     }
   }
-}
-
-function init() {
-  for (let i = 0; i < 90; i++) {
-    particlesArray.push(new Particle());
+  
+  function init() {
+    particlesArray = [];
+    for (let i = 0; i < 80; i++) {
+      particlesArray.push(new Particle());
+    }
   }
-}
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  particlesArray.forEach(p => {
-    p.update();
-    p.draw();
+  
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+    for (let p of particlesArray) {
+      p.update();
+      p.draw();
+    }
+  
+    connectParticles();
+    requestAnimationFrame(animate);
+  }
+  
+  init();
+  animate();
+  
+  /* ===== SCROLL ANIMATION ===== */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+      }
+    });
   });
-
-  connectParticles();
-  requestAnimationFrame(animate);
-}
-
-init();
-animate();
-
-/* ===== SCROLL FADE ===== */
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add("show");
+  
+  document.querySelectorAll("section, .card").forEach(el => {
+    el.classList.add("fade-in");
+    observer.observe(el);
   });
-});
-
-document.querySelectorAll("section, .card").forEach(el => {
-  el.classList.add("fade-in");
-  observer.observe(el);
-});
-
-/* ===== 3D TILT ===== */
-document.querySelectorAll(".card").forEach(card => {
-  card.addEventListener("mousemove", (e) => {
-    let rect = card.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-
-    let rotateX = ((y / rect.height) - 0.5) * -10;
-    let rotateY = ((x / rect.width) - 0.5) * 10;
-
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  
+  /* ===== 3D CARDS ===== */
+  document.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("mousemove", (e) => {
+      let rect = card.getBoundingClientRect();
+      let x = e.clientX - rect.left;
+      let y = e.clientY - rect.top;
+  
+      let rotateX = ((y / rect.height) - 0.5) * -10;
+      let rotateY = ((x / rect.width) - 0.5) * 10;
+  
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+  
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "rotateX(0deg) rotateY(0deg)";
+    });
   });
-
-  card.addEventListener("mouseleave", () => {
-    card.style.transform = "rotateX(0deg) rotateY(0deg)";
-  });
-});
-</script>
+  </script>
 
 </body>
 </html>
