@@ -6,6 +6,10 @@
 <title>Custom Websites</title>
 
 <style>
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -14,30 +18,31 @@
 
 body {
     font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #0f172a;
+    background: #0f172a;
     color: white;
-    line-height: 1.6;
 }
 
+/* HEADER */
 header {
+    position: sticky;
+    top: 0;
+    background: rgba(15,23,42,0.95);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 25px 10%;
-    background: rgba(15,23,42,0.95);
+    padding: 20px 10%;
     border-bottom: 1px solid #1e293b;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
     color: #38bdf8;
+    font-size: 1.4rem;
+    font-weight: bold;
 }
 
 nav a {
     color: white;
+    margin-left: 20px;
     text-decoration: none;
-    margin-left: 25px;
     transition: 0.3s;
 }
 
@@ -45,8 +50,9 @@ nav a:hover {
     color: #38bdf8;
 }
 
+/* HERO */
 .hero {
-    min-height: 85vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,24 +62,23 @@ nav a:hover {
 }
 
 .hero h1 {
-    font-size: 4rem;
+    font-size: 3.5rem;
     margin-bottom: 20px;
 }
 
 .hero p {
     max-width: 700px;
     color: #cbd5e1;
-    font-size: 1.2rem;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .button {
     background: #38bdf8;
     color: #0f172a;
-    text-decoration: none;
-    padding: 14px 30px;
+    padding: 12px 25px;
     border-radius: 8px;
     font-weight: bold;
+    text-decoration: none;
     transition: 0.3s;
 }
 
@@ -82,26 +87,25 @@ nav a:hover {
     box-shadow: 0 0 20px rgba(56,189,248,0.4);
 }
 
-.services {
+/* SECTIONS */
+section {
     padding: 80px 10%;
-    background: #111827;
 }
 
-.services h2 {
-    text-align: center;
-    margin-bottom: 50px;
-    font-size: 2.5rem;
+/* SERVICES */
+.services {
+    background: #111827;
 }
 
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-    gap: 25px;
+    gap: 20px;
 }
 
 .card {
     background: #1e293b;
-    padding: 30px;
+    padding: 25px;
     border-radius: 12px;
     border: 1px solid #334155;
     transition: 0.3s;
@@ -112,8 +116,48 @@ nav a:hover {
 }
 
 .card h3 {
-    margin-bottom: 15px;
     color: #38bdf8;
+    margin-bottom: 10px;
+}
+
+/* PORTFOLIO */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap: 20px;
+}
+
+.project {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    transition: 0.3s;
+}
+
+.project:hover {
+    transform: scale(1.03);
+}
+
+/* CONTACT */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: auto;
+}
+
+input, textarea {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+input, textarea {
+    background: #1e293b;
+    color: white;
 }
 
 footer {
@@ -128,61 +172,70 @@ footer {
 
 <header>
     <div class="logo">Custom Websites</div>
-
     <nav>
-        <a href="#">Home</a>
-        <a href="#">Services</a>
-        <a href="#">Portfolio</a>
-        <a href="#">Contact</a>
+        <a href="#services">Services</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#contact">Contact</a>
     </nav>
 </header>
 
+<!-- HERO -->
 <section class="hero">
-    <h1>Custom Websites For Modern Businesses</h1>
-
-    <p>
-        Professional, responsive, and high-performance websites
-        designed to help businesses stand out online and attract
-        more customers.
-    </p>
-
-    <a href="#" class="button">Request A Quote</a>
+    <h1>Modern Custom Websites</h1>
+    <p>We build sleek, high-performance websites for businesses that want to stand out online.</p>
+    <a href="#contact" class="button">Request a Quote</a>
 </section>
 
-<section class="services">
-    <h2>Our Services</h2>
+<!-- SERVICES -->
+<section id="services" class="services">
+    <h2>Services</h2>
+    <br><br>
 
     <div class="cards">
-
         <div class="card">
             <h3>Business Websites</h3>
-            <p>
-                Custom websites built specifically for your company,
-                brand, and goals.
-            </p>
+            <p>Professional websites tailored to your brand and goals.</p>
         </div>
 
         <div class="card">
-            <h3>Website Redesigns</h3>
-            <p>
-                Modernize outdated websites with a sleek and
-                professional design.
-            </p>
+            <h3>Redesigns</h3>
+            <p>Upgrade outdated websites into modern, fast designs.</p>
         </div>
 
         <div class="card">
-            <h3>Mobile Optimization</h3>
-            <p>
-                Every website is built to look great on phones,
-                tablets, and desktops.
-            </p>
+            <h3>Mobile Friendly</h3>
+            <p>Every site works perfectly on phones, tablets, and desktop.</p>
         </div>
-
     </div>
 </section>
 
+<!-- PORTFOLIO -->
+<section id="portfolio">
+    <h2>Portfolio</h2>
+    <br><br>
+
+    <div class="portfolio-grid">
+        <div class="project">Tech Startup Landing Page</div>
+        <div class="project">Restaurant Website</div>
+        <div class="project">Fitness Coaching Site</div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <h2>Contact</h2>
+    <br><br>
+
+    <form action="https://formspree.io/f/your-id-here" method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+        <button class="button" type="submit">Send Message</button>
+    </form>
+</section>
+
 <footer>
-    © 2026 Custom Websites. All Rights Reserved.
+    © 2026 Custom Websites. All rights reserved.
 </footer>
 
 </body>
