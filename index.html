@@ -7,20 +7,12 @@
 
 <style>
 
-/* BACKGROUND GRADIENT */
+/* BACKGROUND */
 #gradient-bg {
   position: fixed;
   inset: 0;
   z-index: -3;
-
-  background: linear-gradient(
-    -45deg,
-    #0b1220,
-    #1e1b4b,
-    #0b3b5c,
-    #0a0f1f
-  );
-
+  background: linear-gradient(-45deg, #0b1220, #1e1b4b, #0b3b5c, #0a0f1f);
   background-size: 400% 400%;
   animation: gradientShift 18s ease infinite;
 }
@@ -31,20 +23,16 @@
   100% { background-position: 0% 50%; }
 }
 
-/* PARTICLES */
+/* CANVAS */
 #particles {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* BASE */
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -57,12 +45,11 @@ body {
 /* LOADER */
 #loader {
   position: fixed;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: #050814;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 9999;
 }
 
@@ -104,19 +91,8 @@ header {
 }
 
 .logo {
-  font-weight: bold;
   color: #38bdf8;
-  letter-spacing: 1px;
-  opacity: 0;
-  transform: translateY(-10px);
-  animation: logoIn 1s ease forwards;
-}
-
-@keyframes logoIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  font-weight: bold;
 }
 
 nav a {
@@ -125,9 +101,7 @@ nav a {
   text-decoration: none;
 }
 
-nav a:hover {
-  color: #38bdf8;
-}
+nav a:hover { color: #38bdf8; }
 
 /* HERO */
 .hero {
@@ -156,10 +130,14 @@ nav a:hover {
   padding: 12px 25px;
   background: linear-gradient(90deg, #38bdf8, #a78bfa);
   border: none;
-  border-radius: 8px;
-  color: #0f172a;
+  border-radius: 10px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.button:hover {
+  transform: scale(1.05);
 }
 
 /* SECTIONS */
@@ -167,32 +145,26 @@ section {
   padding: 80px 10%;
 }
 
-/* GLASS CARDS */
+/* 3D TILT CARDS */
 .cards, .pricing {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+  perspective: 1000px;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 25px;
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: 0.3s;
+  padding: 25px;
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
+  will-change: transform;
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(56,189,248,0.4);
-}
-
-/* PRICING */
-.price {
-  font-size: 2rem;
-  color: #38bdf8;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 /* CONTACT */
@@ -210,7 +182,7 @@ input, textarea {
 .fade-in {
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.8s ease;
+  transition: 0.8s ease;
 }
 
 .fade-in.show {
@@ -218,15 +190,16 @@ input, textarea {
   transform: translateY(0);
 }
 
+/* LAYERS */
+header, section, footer {
+  position: relative;
+  z-index: 1;
+}
+
 footer {
   text-align: center;
   padding: 30px;
   color: #64748b;
-}
-
-header, section, footer {
-  position: relative;
-  z-index: 1;
 }
 
 </style>
@@ -237,7 +210,6 @@ header, section, footer {
 <div id="gradient-bg"></div>
 <canvas id="particles"></canvas>
 
-<!-- LOADER -->
 <div id="loader">
   <div class="spinner"></div>
 </div>
@@ -256,7 +228,7 @@ header, section, footer {
 
 <section class="hero">
   <h1>Modern Websites That Convert</h1>
-  <p>We design high-performance, sleek websites for businesses that want to stand out online.</p>
+  <p>High-performance, sleek websites for businesses that want to stand out online.</p>
   <button class="button">Get Started</button>
 </section>
 
@@ -264,7 +236,7 @@ header, section, footer {
   <h2>Services</h2>
   <div class="cards">
     <div class="card">Business Websites</div>
-    <div class="card">Website Redesigns</div>
+    <div class="card">Redesigns</div>
     <div class="card">Mobile Optimization</div>
   </div>
 </section>
@@ -298,7 +270,6 @@ header, section, footer {
 
 <section id="contact">
   <h2>Contact</h2>
-
   <form action="https://formspree.io/f/xbdbeaoe" method="POST">
     <input type="text" name="name" placeholder="Name" required>
     <input type="email" name="email" placeholder="Email" required>
@@ -312,12 +283,11 @@ header, section, footer {
 </footer>
 
 <script>
-window.onload = function () {
+window.onload = () => {
   document.getElementById("loader").style.display = "none";
 };
-</script>
 
-<script>
+/* ===== PARTICLES (mouse reactive + connections) ===== */
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
@@ -325,19 +295,33 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particlesArray = [];
+let mouse = { x: null, y: null };
+
+window.addEventListener("mousemove", (e) => {
+  mouse.x = e.x;
+  mouse.y = e.y;
+});
 
 class Particle {
   constructor() {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
     this.size = Math.random() * 2;
-    this.speedX = (Math.random() - 0.5) * 0.5;
-    this.speedY = (Math.random() - 0.5) * 0.5;
+    this.speedX = (Math.random() - 0.5);
+    this.speedY = (Math.random() - 0.5);
   }
 
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
+
+    // mouse attraction
+    if (mouse.x && mouse.y) {
+      let dx = mouse.x - this.x;
+      let dy = mouse.y - this.y;
+      this.x += dx * 0.0008;
+      this.y += dy * 0.0008;
+    }
 
     if (this.x < 0) this.x = canvas.width;
     if (this.x > canvas.width) this.x = 0;
@@ -346,7 +330,7 @@ class Particle {
   }
 
   draw() {
-    ctx.fillStyle = "rgba(56, 189, 248, 1)";
+    ctx.fillStyle = "rgba(56,189,248,0.9)";
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fill();
@@ -358,10 +342,10 @@ function connectParticles() {
     for (let b = a; b < particlesArray.length; b++) {
       let dx = particlesArray[a].x - particlesArray[b].x;
       let dy = particlesArray[a].y - particlesArray[b].y;
-      let distance = Math.sqrt(dx * dx + dy * dy);
+      let dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (distance < 120) {
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.15)";
+      if (dist < 120) {
+        ctx.strokeStyle = "rgba(56,189,248,0.12)";
         ctx.beginPath();
         ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
         ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
@@ -372,7 +356,7 @@ function connectParticles() {
 }
 
 function init() {
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 90; i++) {
     particlesArray.push(new Particle());
   }
 }
@@ -380,10 +364,10 @@ function init() {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (let p of particlesArray) {
+  particlesArray.forEach(p => {
     p.update();
     p.draw();
-  }
+  });
 
   connectParticles();
   requestAnimationFrame(animate);
@@ -392,18 +376,34 @@ function animate() {
 init();
 animate();
 
-// SCROLL ANIMATIONS
+/* ===== SCROLL FADE ===== */
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("show");
-    }
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add("show");
   });
 });
 
 document.querySelectorAll("section, .card").forEach(el => {
   el.classList.add("fade-in");
   observer.observe(el);
+});
+
+/* ===== 3D TILT ===== */
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("mousemove", (e) => {
+    let rect = card.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+
+    let rotateX = ((y / rect.height) - 0.5) * -10;
+    let rotateY = ((x / rect.width) - 0.5) * 10;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "rotateX(0deg) rotateY(0deg)";
+  });
 });
 </script>
 
